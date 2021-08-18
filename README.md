@@ -13,6 +13,12 @@ The goal of this application will be to manage an eWallet effectively. Making it
 ## User Stories
 - User requests to add money to eWallet from their bank.
 - User requests to cancel money transfer.
-- Block malicious user from transfering money from fake bank.
+- Block malicious user from transferring money from fake bank.
 - Allow users to spend eWallet money in online store.
 - Allow users to cancel order within a day of purchase.
+## REST Queries
+- "/user" to access site to create a user
+- "/user/user_id" to access user info
+- "/transfer" to setup a transfer
+- "/transfer/transfer_id" to access transfer info
+- "/pay" to setup a withdrawal
