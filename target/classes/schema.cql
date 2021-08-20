@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS wallets (
   user_id int,
   name text,
   balance double,
-  PRIMARY KEY (user_id, name)
+  PRIMARY KEY (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS transfers (
@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS transfers (
   user_id int,
   amount double,
   transfer_created timestamp,
-  PRIMARY KEY (transfer_id, user_id)
+  PRIMARY KEY (user_id, transfer_id)
 );

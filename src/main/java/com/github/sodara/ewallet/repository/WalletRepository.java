@@ -8,6 +8,4 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface WalletRepository extends ReactiveCassandraRepository<Wallet, Integer> {
-  @AllowFiltering
-  Flux<Wallet> findByName(int name);
 }
