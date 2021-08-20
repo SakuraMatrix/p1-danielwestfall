@@ -68,4 +68,19 @@ public class App {
     }
     return transfer;
   }
+  static Transfer parseTransferUUID(String str) {
+    Logger log = LoggerFactory.getLogger(App.class);
+    Transfer transfer = null;
+    try {
+      transfer = OBJECT_MAPPER.readValue(str, Transfer.class);
+    } catch (JsonProcessingException ex) {
+      log.info("Parsing Transfer");
+      log.info(str);
+      String[] params = str.split("&");
+      String transfer_id = params[0].split("=")[1];
+      int user_id = Integer.parseInt(params[1].split("=")[1]);
+      transfer = new Transfer(transfer_id, user_id);
+    }
+    return transfer;
+  }
 }

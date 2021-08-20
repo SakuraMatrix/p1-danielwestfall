@@ -17,10 +17,6 @@ public class Transfer {
   private double amount;
   private Timestamp transfer_created;
 
-  public Transfer(){
-
-  }
-
   public Transfer(int user_id, double amount) {
     this.transfer_id = UUID.randomUUID();
     this.user_id = user_id;
@@ -33,6 +29,12 @@ public class Transfer {
     this.user_id = user_id;
     this.amount = amount;
     this.transfer_created = transfer_created;
+  }
+  public Transfer(String transfer_id, int user_id){
+    this.transfer_id = UUID.fromString(transfer_id);
+    this.user_id = user_id;
+    this.amount = 0;
+    this.transfer_created = Timestamp.from(Instant.now());
   }
 
   @Override

@@ -28,6 +28,7 @@ public class AppConfig {
   public HttpServer httpServer(ApplicationContext context) throws URISyntaxException {
     Path add_wallet_html = Paths.get(App.class.getResource("/add_wallet.html").toURI());
     Path add_transfer_html = Paths.get(App.class.getResource("/add_transfer.html").toURI());
+    Path del_transfer_html = Paths.get(App.class.getResource("/delete_transfer.html").toURI());
     return HttpServer.create().port(8080).route(routes ->
         routes.get("/wallets", (request, response) ->
                 response.send(walletService.getAll()
@@ -49,10 +50,18 @@ public class AppConfig {
                     .map(transferService::create)
                     .map(App::toByteBuf)
                     .log("http-server")))
+            .post("/deleted_transfer", (request, response) ->
+                response.send(request.receive().asString()
+                    .map(App::parseTransferUUID)
+                    .map(transferService::delete)
+                    .map(App::toByteBuf)
+                    .log("http-server")))
             .get("/add_wallet", (request, response) ->
                 response.sendFile(add_wallet_html))
             .get("/add_transfer", (request, response) ->
                 response.sendFile(add_transfer_html))
+            .get("/del_transfer", (request, response) ->
+                response.sendFile(del_transfer_html))
             .get("/wallet/{userId}", ((request, response) ->
                 response.send(walletService.getWallet(
                         Integer.parseInt(request.param("userId")))

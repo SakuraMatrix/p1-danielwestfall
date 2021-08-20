@@ -1,15 +1,13 @@
 package com.github.sodara.ewallet.service;
 
 import com.github.sodara.ewallet.domain.Transfer;
-import com.github.sodara.ewallet.domain.Wallet;
+import java.util.UUID;
 import com.github.sodara.ewallet.repository.TransferRepository;
 import com.github.sodara.ewallet.repository.WalletRepository;
-import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service
 public class TransferService {
@@ -32,11 +30,24 @@ public class TransferService {
   }
 
   public Transfer create(Transfer transfer) {
-    Disposable my_wallet = walletRepository.get(transfer.getUserId()).map(wallet -> {
+    walletRepository.get(transfer.getUserId()).map(wallet -> {
       wallet.setBalance(wallet.getBalance() + transfer.getAmount());
       walletRepository.create(wallet);
       return wallet;
     }).subscribe();
     return transferRepository.create(transfer);
+  }
+  public String delete(Transfer transfer) {
+    transferRepository.getByTransferID(
+      transfer.getUuid()).map(my_transfer -> {
+        walletRepository.get(my_transfer.getUserId()).map(wallet -> {
+          wallet.setBalance(wallet.getBalance() - my_transfer.getAmount());
+          walletRepository.create(wallet);
+          transferRepository.destroy(my_transfer.getUuid(), my_transfer.getUserId());
+          return wallet;
+      }).log().subscribe();
+      return my_transfer;
+    }).log().subscribe();
+    return "Complete";
   }
 }
