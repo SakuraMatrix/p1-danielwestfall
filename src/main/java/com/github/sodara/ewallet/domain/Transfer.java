@@ -17,6 +17,10 @@ public class Transfer {
   private double amount;
   private Timestamp transfer_created;
 
+  public Transfer(){
+
+  }
+
   public Transfer(int user_id, double amount) {
     this.transfer_id = UUID.randomUUID();
     this.user_id = user_id;

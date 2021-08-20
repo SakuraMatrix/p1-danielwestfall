@@ -7,6 +7,7 @@ import com.github.sodara.ewallet.repository.WalletRepository;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -26,18 +27,16 @@ public class TransferService {
     return transferRepository.getAll();
   }
 
-  public Flux<Transfer> getAllByUserID(int user_id) {
+  public Flux<Transfer> getTransfersByUserID(int user_id) {
     return transferRepository.get(user_id);
   }
 
   public Transfer create(Transfer transfer) {
-    Mono<Wallet> mono_wallet = walletRepository.findById(transfer.getUserId());
-    Wallet my_wallet = mono_wallet.block();
-    if (my_wallet != null) {
-      my_wallet.setBalance(my_wallet.getBalance() + transfer.getAmount());
-      walletRepository.save(my_wallet);
-      return transferRepository.create(transfer);
-    }
-    else {return null;}
+    Disposable my_wallet = walletRepository.get(transfer.getUserId()).map(wallet -> {
+      wallet.setBalance(wallet.getBalance() + transfer.getAmount());
+      walletRepository.create(wallet);
+      return wallet;
+    }).subscribe();
+    return transferRepository.create(transfer);
   }
 }

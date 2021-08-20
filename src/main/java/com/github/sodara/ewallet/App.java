@@ -54,13 +54,16 @@ public class App {
   }
 
   static Transfer parseTransfer(String str) {
+    Logger log = LoggerFactory.getLogger(App.class);
     Transfer transfer = null;
     try {
       transfer = OBJECT_MAPPER.readValue(str, Transfer.class);
     } catch (JsonProcessingException ex) {
+      log.info("Parsing Transfer");
+      log.info(str);
       String[] params = str.split("&");
       int user_id = Integer.parseInt(params[0].split("=")[1]);
-      double amount = Double.parseDouble(params[2].split("=")[1]);
+      double amount = Double.parseDouble(params[1].split("=")[1]);
       transfer = new Transfer(user_id, amount);
     }
     return transfer;

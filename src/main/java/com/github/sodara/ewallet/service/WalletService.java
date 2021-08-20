@@ -17,14 +17,14 @@ public class WalletService {
   }
 
   public Flux<Wallet> getAll() {
-    return walletRepository.findAll();
+    return walletRepository.getAll();
   }
 
-  public Mono<Wallet> get(int id) {
-    return walletRepository.findById(id);
+  public Mono<Wallet> getWallet(int id) {
+    return walletRepository.get(id);
   }
 
-  public Mono<Wallet> create(Wallet wallet) {
-    return walletRepository.save(wallet);
+  public Wallet create(Wallet wallet) {
+    return walletRepository.create(wallet);
   }
 }
